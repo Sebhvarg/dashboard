@@ -6,6 +6,7 @@ import IndicatorWeather from './components/IndicatorWeather'
 import TableWeather from './components/TableWeather';
 import ControlWeather from './components/ControlWeather';
 import LineChartWeather from './components/LineChartWeather';
+import Item from './interface/Item';
 {/* Hooks */ }
 import { useEffect, useState } from 'react';
 interface Indicator {
@@ -14,58 +15,104 @@ interface Indicator {
   value?: String;
 }
 
+
+
+
 function App() {
 
-       {/* Variable de estado y función de actualización */}
-       let [indicators, setIndicators] = useState<Indicator[]>([])
-       let [owm, setOWM] = useState(localStorage.getItem("openWeatherMap"))
-  
-     {/* Hook: useEffect */}
-     useEffect(()=>{
+  // Cree una variable de estado y función de actualización para un arreglo del tipo Item, p.e.: items y setItems.
 
-      let request = async () => {
-        
+  let [items, setItems] = useState<Item[]>([]);
 
-          {/* Request */}
-          let API_KEY = "dfd098236efe520ed6dabd68fa36c584"
-          let response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Quevedo&mode=xml&appid=${API_KEY}`)
-          let savedTextXML = await response.text();
-             {/* XML Parser */}
-             const parser = new DOMParser();
-             const xml = parser.parseFromString(savedTextXML, "application/xml");
-                 {/* Arreglo para agregar los resultados */}
 
-                 let dataToIndicators : Indicator[] = new Array<Indicator>();
+  {/* Variable de estado y función de actualización */ }
+  let [indicators, setIndicators] = useState<Indicator[]>([])
+  let [owm, setOWM] = useState(localStorage.getItem("openWeatherMap"))
 
-                 {/* 
+  {/* Hook: useEffect */ }
+  useEffect(() => {
+
+    let request = async () => {
+
+
+      {/* Request */ }
+      let API_KEY = "dfd098236efe520ed6dabd68fa36c584"
+      let response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Quevedo&mode=xml&appid=${API_KEY}`)
+      let savedTextXML = await response.text();
+      {/* XML Parser */ }
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(savedTextXML, "application/xml");
+      {/* Arreglo para agregar los resultados */ }
+
+      let dataToIndicators: Indicator[] = new Array<Indicator>();
+
+
+
+      {/* 
                      Análisis, extracción y almacenamiento del contenido del XML 
                      en el arreglo de resultados
                  */}
-    
-                 let name = xml.getElementsByTagName("name")[0].innerHTML || ""
-                 dataToIndicators.push({"title":"Location", "subtitle": "City", "value": name})
-    
-                 let location = xml.getElementsByTagName("location")[1]
-    
-                 let latitude = location.getAttribute("latitude") || ""
-                 dataToIndicators.push({ "title": "Location", "subtitle": "Latitude", "value": latitude })
-    
-                 let longitude = location.getAttribute("longitude") || ""
-                 dataToIndicators.push({ "title": "Location", "subtitle": "Longitude", "value": longitude })
-    
-                 let altitude = location.getAttribute("altitude") || ""
-                 dataToIndicators.push({ "title": "Location", "subtitle": "Altitude", "value": altitude })
-    
-                 console.log( dataToIndicators )
 
-                 setIndicators( dataToIndicators )
+      let name = xml.getElementsByTagName("name")[0].innerHTML || ""
+      dataToIndicators.push({ "title": "Location", "subtitle": "City", "value": name })
 
+      let location = xml.getElementsByTagName("location")[1]
+
+      let latitude = location.getAttribute("latitude") || ""
+      dataToIndicators.push({ "title": "Location", "subtitle": "Latitude", "value": latitude })
+
+      let longitude = location.getAttribute("longitude") || ""
+      dataToIndicators.push({ "title": "Location", "subtitle": "Longitude", "value": longitude })
+
+      let altitude = location.getAttribute("altitude") || ""
+      dataToIndicators.push({ "title": "Location", "subtitle": "Altitude", "value": altitude })
+
+      console.log(dataToIndicators)
+
+      setIndicators(dataToIndicators)
+
+      // Cree un arreglo temporal del tipo Item para almacenar los valores del XML, p.e.: dataToItems.
+
+      let dataToItems: Item[] = new Array<Item>();
+
+      /* 
+      * Analice el XML y utilice el DOM API obtener la referencia:
+
+A la etiqueta time y extraiga los atributos @from, @to
+A la etiqueta time > precipitacion y extraiga el atributo probability
+A la etiqueta time > humidity y extraiga el atributo value
+A la etiqueta time > clouds y extraiga el atributo all
+      */
+
+      let times = xml.getElementsByTagName("time");
+      
+      for (let i = 0; i < times.length; i++) {
+        let time = times[i];
+        let from = time.getAttribute("from") || "";
+        let to = time.getAttribute("to") || "";
+        let precipitation = time.getElementsByTagName("precipitation")[0].getAttribute("probability") || "";
+        let humidity = time.getElementsByTagName("humidity")[0].getAttribute("value") || "";
+        let clouds = time.getElementsByTagName("clouds")[0].getAttribute("all") || "";
+
+        
+
+        // Almacene los valores en el arreglo temporal.
+        dataToItems.push({ from, to, precipitation, humidity, clouds, itemsIn: [] });
 
       }
+      // Use la función de actualización para asignar el arreglo temporal.
+      setItems(dataToItems);
+      console.log(dataToItems);
 
-      request();
 
-  },[])
+
+
+
+    }
+
+    request();
+
+  }, [])
 
 
   return (
@@ -87,17 +134,17 @@ function App() {
       </Grid>
        */}{
         indicators
-        .map(
+          .map(
             (indicator, idx) => (
-                <Grid key={idx} size={{ xs: 12, xl: 3 }}>
-                    <IndicatorWeather 
-                        title={indicator["title"]} 
-                        subtitle={indicator["subtitle"]} 
-                        value={indicator["value"]} />
-                </Grid>
+              <Grid key={idx} size={{ xs: 12, xl: 3 }}>
+                <IndicatorWeather
+                  title={indicator["title"]}
+                  subtitle={indicator["subtitle"]}
+                  value={indicator["value"]} />
+              </Grid>
             )
-        )
-       }
+          )
+      }
 
       {/* Tabla */}
       <Grid size={{ xs: 12, xl: 8 }}>Elemento: Tabla
@@ -108,7 +155,7 @@ function App() {
             <ControlWeather />
           </Grid>
           <Grid size={{ xs: 12, xl: 9 }}>
-            <TableWeather />
+            <TableWeather itemsIn={ items } />
           </Grid>
         </Grid>
 
