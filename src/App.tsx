@@ -15,8 +15,10 @@ interface Indicator {
 }
 
 function App() {
-     {/* Variable de estado y función de actualización */}
-     let [indicators, setIndicators] = useState<Indicator[]>([])
+
+       {/* Variable de estado y función de actualización */}
+       let [indicators, setIndicators] = useState<Indicator[]>([])
+       let [owm, setOWM] = useState(localStorage.getItem("openWeatherMap"))
   
      {/* Hook: useEffect */}
      useEffect(()=>{
@@ -26,7 +28,7 @@ function App() {
 
           {/* Request */}
           let API_KEY = "dfd098236efe520ed6dabd68fa36c584"
-          let response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Guayaquil&mode=xml&appid=${API_KEY}`)
+          let response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Quevedo&mode=xml&appid=${API_KEY}`)
           let savedTextXML = await response.text();
              {/* XML Parser */}
              const parser = new DOMParser();
