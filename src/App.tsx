@@ -4,7 +4,6 @@ import './App.css'
 import Grid from '@mui/material/Grid2'
 import IndicatorWeather from './components/IndicatorWeather'
 import TableWeather from './components/TableWeather';
-import ControlWeather from './components/ControlWeather';
 import LineChartWeather from './components/LineChartWeather';
 import Item from './interface/Item';
 {/* Hooks */ }
@@ -19,7 +18,7 @@ interface Indicator {
 function App() {
   const [items, setItems] = useState<Item[]>([]);
   const [indicators, setIndicators] = useState<Indicator[]>([]);
-  const [owm, setOWM] = useState(localStorage.getItem("openWeatherMap"));
+  const [owm] = useState(localStorage.getItem("openWeatherMap"));
 
   useEffect(() => {
     const fetchData = async () => {
