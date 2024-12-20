@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -6,40 +7,82 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Item from '../interface/Item';
+import { Typography } from '@mui/material';
 
-interface TableWeatherProps {
+interface MyProp {
   itemsIn: Item[];
 }
 
-export default function BasicTable({ itemsIn }: TableWeatherProps) {
-  const hora = (date: string) => {
-    const horas = date.split("T")[1].split(":");
-    return `${horas[0]}:${horas[1]}`;
-  }
+export default function TableWeather(props: MyProp) {
+  const [rows, setRows] = useState<Item[]>([]);
+
+  useEffect(() => {
+    setRows(props.itemsIn);
+  }, [props.itemsIn]);
+
+
+
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Hora Inicio</TableCell>
-            <TableCell>Hora Fin</TableCell>
-            <TableCell align="right">Precipitación</TableCell>
-            <TableCell align="right">Humedad</TableCell>
-            <TableCell align="right">Nubosidad</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {itemsIn.map((item, idx) => (
-            <TableRow key={idx}>
-              <TableCell>{hora(item.dateStart)}</TableCell>
-              <TableCell>{hora(item.dateEnd)}</TableCell>
-              <TableCell align="right">{item.precipitation}%</TableCell>
-              <TableCell align="right">{item.humidity}%</TableCell>
-              <TableCell align="right">{item.clouds}%</TableCell>
+    <Paper
+      sx={{
+        p: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%', // Ajustar al 100% del contenedor
+        margin: '5px',
+        borderRadius: '5px',
+        height: 'auto',
+      }}
+    >
+      <Typography component="h2" variant="h6"
+        color="black" sx={{ fontFamily: 'Helvetica', fontSize: '16px', fontWeight: 'Bold', flex: 1 }} gutterBottom>Precipitaciones próximas en horas</Typography>
+      <TableContainer
+        component={Paper}
+        sx={{
+          width: '100%', // Ocupa todo el ancho del Paper
+          overflow: 'auto', // Habilita scroll si el contenido excede la altura
+          borderRadius: '5px',
+        }}
+      >
+        <Table sx={{ border: '1px solid #0570B0', widt: '60%' }} >
+          <TableHead>
+            <TableRow sx={{ backgroundColor: '#0570B0' }}>
+              <TableCell align="left" sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                borderBottom: '1px solid white',
+              }} >Hora de inicio</TableCell>
+              <TableCell align="left" sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                borderBottom: '1px solid white',
+              }}>Hora de fin</TableCell>
+              <TableCell align="right" sx={{
+                color: 'white',
+                fontWeight: 'bold',
+                fontSize: '1rem',
+                borderBottom: '1px solid white',
+              }}>Precipitación (%)</TableCell>
+
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {rows.map((row, idx) => (
+              <TableRow key={idx}>
+                <TableCell component="th" scope="row">
+                  {row.dateStart}
+                </TableCell>
+                <TableCell align="left">{row.dateEnd}</TableCell>
+                <TableCell align="right">{row.precipitation} %</TableCell>
+
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
   );
 }
