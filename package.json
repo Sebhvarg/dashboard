@@ -2,7 +2,7 @@
   "name": "dashboard",
   "private": true,
   "version": "0.0.2",
-  "homepage": "https://sebhvarg.github.io/dashboard",
+  "homepage": "https://sebhvarg.github.io/dashboard/",
   "type": "module",
   "scripts": {
     "dev": "vite",
