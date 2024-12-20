@@ -5,6 +5,7 @@ import DetailsWeather from './components/DetailsWeather';
 import Header from './components/Header';
 import TableWeather from './components/TableWeather';
 import LineChartWeather from './components/LineChartWeather';
+import ControlWeather from './components/ControlWeather';
 import { useEffect, useState } from 'react';
 import Item from './interface/Item';
 import Lluvia from './assets/img/lluvia.png';
