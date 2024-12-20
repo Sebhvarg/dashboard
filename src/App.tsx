@@ -5,7 +5,6 @@ import DetailsWeather from './components/DetailsWeather';
 import Header from './components/Header';
 import TableWeather from './components/TableWeather';
 import LineChartWeather from './components/LineChartWeather';
-import ControlWeather from './components/ControlWeather';
 import { useEffect, useState } from 'react';
 import Item from './interface/Item';
 import Lluvia from './assets/img/lluvia.png';
@@ -34,11 +33,11 @@ function App() {
     feelsLike: '0',
   });
   const [chartData, setChartData] = useState({
-    temperatureData: [],
-    humidityData: [],
-    cloudData: [],
-    windSpeeds: [],
-    xLabels: [],
+    temperatureData: [] as number[], 
+    windSpeeds: [] as number[],      
+    humidityData: [] as number[],   
+    cloudData: [] as number[],      
+    xLabels: [] as string[],         
   });
 
   useEffect(() => {
@@ -62,8 +61,7 @@ function App() {
         const temperature = xmlDoc.getElementsByTagName("temperature")[0]?.getAttribute("value") || "";
         const feelsLike = xmlDoc.getElementsByTagName("feels_like")[0]?.getAttribute("value") || "";
         const humidity = xmlDoc.getElementsByTagName("humidity")[0]?.getAttribute("value") || "";
-        let rainProbability = xmlDoc.getElementsByTagName("precipitation")[0]?.getAttribute("probability") || "";
-        rainProbability = parseFloat(rainProbability) * 100;
+        const rainProbability = xmlDoc.getElementsByTagName("precipitation")[0]?.getAttribute("probability")?.split('.')[1] || "0";
 
         const roundedTemperature = Math.round(parseFloat(temperature));
         setIndicators([
@@ -89,9 +87,8 @@ function App() {
         const cloudData: number[] = [];
         const xLabels: string[] = [];
 
+
         const timeElements = xmlDoc.getElementsByTagName("time");
-        xMenor = parseFloat(timeElements[0].getElementsByTagName("temperature")[0]?.getAttribute("value") || "");
-        xMayor = parseFloat(timeElements[0].getElementsByTagName("temperature")[0]?.getAttribute("value") || "");
 
         for (let i = 0; i < Math.min(5, timeElements.length); i++) {
           const time = timeElements[i];
@@ -119,18 +116,23 @@ function App() {
           dataToItems.push({
             dateStart: time.getAttribute("from")?.split("T")[1] || "",
             dateEnd: time.getAttribute("to")?.split("T")[1] || "",
-            precipitation: Math.round(time.getElementsByTagName("precipitation")[0]?.getAttribute("probability") * 100) || "",
+            precipitation: String(Math.round(parseFloat(time.getElementsByTagName("precipitation")[0]?.getAttribute("probability") || "0") * 100)),
             humidity: time.getElementsByTagName("humidity")[0]?.getAttribute("value") || "",
             clouds: time.getElementsByTagName("clouds")[0]?.getAttribute("all") || "",
           });
-
+          
+          
           temperatureData.push(tempValue);
           windSpeeds.push(windValue);
           xLabels.push(dateLabel);
         }
 
-        setXMenor(xMenor.toFixed(0));
-        setXMayor(xMayor.toFixed(0));
+        setXMenor(xMenor);
+
+        setXMayor(xMayor);
+        console.log(xMenor, xMayor + "xMenor, xMayor");
+        
+
         setItems(dataToItems);
 
         // Configurar datos del gráfico

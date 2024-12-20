@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Paper from "@mui/material/Paper";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { Grid, Typography } from "@mui/material";

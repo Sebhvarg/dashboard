@@ -1,8 +1,5 @@
 import { useState, useRef } from 'react';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -38,7 +35,7 @@ export default function ControlWeather({ onSelectionChange }: { onSelectionChang
         <Select
           labelId="simple-select-label"
           id="simple-select"
-          defaultValue={-1}
+          defaultValue='-1'
 
           onChange={handleChange}
           sx={{

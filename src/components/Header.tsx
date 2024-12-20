@@ -1,11 +1,12 @@
 import Logo from '../assets/img/logo.png';
+interface Description{
+    name: string;
+    min: number;
+    max: number;
+}
 
 export default function Header(config: Description) {
-    interface Description{
-        name: string;
-        min: number;
-        max: number;
-    }
+   
     return (
         <div>
            <div>

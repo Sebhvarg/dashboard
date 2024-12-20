@@ -5,8 +5,8 @@ import imagenGYE from '../assets/img/m2000.png';
 import imagenUIO from '../assets/img/panQuito.png';
 import luna from '../assets/img/luna.png';
 import sol from '../assets/img/sol.png';
-import React, { useState, useEffect } from 'react';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Select, MenuItem, FormControl } from '@mui/material';
 
 interface Indicator {
   title?: string;
@@ -29,10 +29,6 @@ export default function IndicatorWeather({ title, subtitle, value, city, unit, h
   const cityImages: { [key: string]: string } = {
     Guayaquil: imagenGYE,
     Quito: imagenUIO,
-  };
-  const diaImages: { [key: string]: string } = {
-    isDayTime: sol,
-    isNightTime: luna,
   };
 
   useEffect(() => {
