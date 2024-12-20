@@ -71,7 +71,6 @@ function App() {
             subtitle: weatherStatus.charAt(0).toUpperCase() + weatherStatus.slice(1),
           },
         ]);
-
         // Configurar detalles de clima
         setDetails({
           rainProbability,
