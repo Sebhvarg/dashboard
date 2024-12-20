@@ -1,80 +1,90 @@
-import { useState, useRef } from 'react';
+{/* Componentes MUI */ }
+
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+  {/* Hooks */ }
+  import { useState, useRef } from 'react';
+{/* Interfaz SelectChangeEvent */ }
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+export default function ControlWeather() {
+     {/* Constante de referencia a un elemento HTML */ }
+     const descriptionRef = useRef<HTMLDivElement>(null);
+      {/* Variable de estado y función de actualización */}
+      let [, setSelected] = useState(-1)
 
-export default function ControlWeather({ onSelectionChange }: { onSelectionChange: (selected: number) => void }) {
-  const descriptionRef = useRef<HTMLDivElement>(null);
-  const [, setSelected] = useState(0); // Inicializa con el valor de "Temperatura"
+    {/* Arreglo de objetos */ }
+    let items = [
+        { "name": "Precipitación", "description": "Cantidad de agua que cae sobre una superficie en un período específico." },
+        { "name": "Humedad", "description": "Cantidad de vapor de agua presente en el aire, generalmente expresada como un porcentaje." },
+        { "name": "Nubosidad", "description": "Grado de cobertura del cielo por nubes, afectando la visibilidad y la cantidad de luz solar recibida." }
+    ]
 
-  const items = [
-    { name: "Temperatura", description: "Magnitud física que mide el grado de calor o frío de un cuerpo o del ambiente" },
-    { name: "Humedad", description: "Cantidad de vapor de agua presente en el aire, generalmente expresada como un porcentaje." },
-    { name: "Nubosidad", description: "Grado de cobertura del cielo por nubes, afectando la visibilidad y la cantidad de luz solar recibida." },
-  ];
+    {/* Arreglo de elementos JSX */ }
+    let options = items.map((item, key) => <MenuItem key={key} value={key}>{item["name"]}</MenuItem>)
 
-  const options = items.map((item, key) => (
-    <MenuItem key={key} value={key}>
-      {item.name}
-    </MenuItem>
-  ));
+    {/* Manejador de eventos */ }
+    const handleChange = (event: SelectChangeEvent) => {
 
-  const handleChange = (event: SelectChangeEvent) => {
-    const idx = parseInt(event.target.value);
-    setSelected(idx);
-    if (descriptionRef.current !== null) {
-      descriptionRef.current.innerHTML = idx >= 0 ? items[idx].description : "";
-    }
-    onSelectionChange(idx); // Notifica al componente padre
-  };
+        let idx = parseInt(event.target.value)
+        // alert( idx );
+        setSelected( idx );
+           {/* Modificación de la referencia descriptionRef */}
+           if (descriptionRef.current !== null) {
+            descriptionRef.current.innerHTML = (idx >= 0) ? items[idx]["description"] : ""
+        }
+    };
 
-  return (
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
-        <Select
-          labelId="simple-select-label"
-          id="simple-select"
-          defaultValue={-1}
-
-          onChange={handleChange}
-          sx={{
-            backgroundColor: "white",
-            color: "black",
-            borderRadius: "20px",
-            marginBottom: "1rem",
-            paddingRight: "2rem",
-            width: "30vh",
-            "& .MuiSelect-select": {
-              paddingLeft: "1rem",
-            },
-            height: "2rem",
-            "& .MuiSelect-icon": {
-              color: "#08306B",
-            },
-            "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: "blue",
-            },
-            "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: "darkblue",
-            },
-            "& .MuiInputLabel-root": {
-              color: "black",
-            },
-            "&:focus .MuiOutlinedInput-notchedOutline": {
-              borderColor: "blue",
-            },
-          }}
+    {/* JSX */ }
+    return (
+        <Paper
+            sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column'
+            }}
         >
-          <MenuItem key="1" value="-1" disabled>
-            Seleccione una variable
-          </MenuItem>
-          {options}
-        </Select>
-      </FormControl>
-    </Box>
-  );
+
+            <Typography mb={2} component="h3" variant="h6" color="primary">
+                Variables Meteorológicas
+            </Typography>
+
+            <Box sx={{ minWidth: 120 }}>
+
+                <FormControl fullWidth>
+                    <InputLabel id="simple-select-label">Variables</InputLabel>
+                    <Select
+                        labelId="simple-select-label"
+                        id="simple-select"
+                        label="Variables"
+                        defaultValue='-1'
+                        onChange={handleChange}
+                    >
+                        <MenuItem key="-1" value="-1" disabled>Seleccione una variable</MenuItem>
+
+                        {options}
+
+                    </Select>
+                </FormControl>
+
+            </Box>
+
+                {/*
+               
+               <Typography mt={2} component="p" color="text.secondary">
+             {
+                 (selected >= 0)?items[selected]["description"]:""
+             }
+             </Typography>
+             */}
+              <Typography ref={descriptionRef} mt={2} component="p" color="text.secondary" />
+
+
+        </Paper>
+
+
+    )
 }

@@ -1,48 +1,38 @@
-import React from "react";
-import Paper from "@mui/material/Paper";
-import { LineChart } from "@mui/x-charts/LineChart";
-import { Typography } from "@mui/material";
+import Paper from '@mui/material/Paper';
+import { LineChart } from '@mui/x-charts/LineChart';
 
-interface LineChartProps {
-  windSpeeds: number[];
-  xLabels: string[];
-}
+const uData = [4000, 3000, 2000, 2780, 1890, 2390, 3490];
+const pData = [2400, 1398, 9800, 3908, 4800, 3800, 4300];
+const xLabels = [
+    'Page A',
+    'Page B',
+    'Page C',
+    'Page D',
+    'Page E',
+    'Page F',
+    'Page G',
+];
 
-export default function LineChartWeather({ windSpeeds, xLabels }: LineChartProps) {
-  return (
-    <Paper
-      sx={{
-        p: 5,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "75%",
-        margin: "5px",
-        borderRadius: "5px",
-        height: "345px",
-      }}
-    >
-        <Typography component="h2" variant="h6"
-        color="black" sx={{ fontFamily: 'Helvetica', fontSize: '16px', fontWeight: 'Bold', flex: 1 }} gutterBottom>Gráfica del viento</Typography>
-      <LineChart
-        width={400}
-        height={250}
-        series={[
-          
-          { data: windSpeeds,
-            color: "#0570B0",            
-          },
-          
-        ]}
-        xAxis={[{ scaleType: "point", data: xLabels, label: "Hora", labelStyle: { fontSize: 12, fontFamily: 'Helvetica', fontWeight:'Bold', marginTop:'5px' } }]}
-        yAxis={[
-          {
-            scaleType: "linear",
-            label: "Velocidad del viento (m/s)",
-            labelStyle: { fontSize: 12, fontFamily: 'Helvetica', fontWeight:'Bold', marginTop:'5px' },
-          },
-        ]}
-      />
-    </Paper>
-  );
+export default function LineChartWeather() {
+    return (
+        <Paper
+            sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column'
+            }}
+        >
+
+            {/* Componente para un gráfico de líneas */}
+            <LineChart
+                width={400}
+                height={250}
+                series={[
+                    { data: pData, label: 'pv' },
+                    { data: uData, label: 'uv' },
+                ]}
+                xAxis={[{ scaleType: 'point', data: xLabels }]}
+            />
+        </Paper>
+    );
 }
